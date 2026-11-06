@@ -270,6 +270,10 @@ pub struct WorkingDirectoriesModel {
     /// - the detected repository root when the path belongs to a repo
     /// - otherwise, the normalized path itself (local) or the remote CWD/editor path
     ///
+    /// When `use_working_directory_roots` is on, local roots are instead each terminal's
+    /// working directory, plus the directory of any open file that is neither under nor above
+    /// one of those working directories. Remote roots are unaffected.
+    ///
     /// IndexSet maintains insertion order - most recently added directories appear later.
     pane_groups: HashMap<EntityId, IndexSet<LocalOrRemotePath>>,
     /// Per-pane-group tracking of active repository roots as a deduplicated, ordered set.
@@ -696,15 +700,17 @@ impl WorkingDirectoriesModel {
                 let path_buf = PathBuf::from(&path);
                 let resolved_path = if use_working_directory_roots {
                     // A file under a terminal's directory is already shown. Otherwise use the
-                    // file's own directory, so an open file doesn't widen the tree to its repo root.
+                    // file's own directory, unless that directory contains a terminal's directory:
+                    // the file tree would merge the two and widen back to the ancestor.
                     let file_path = normalize_cwd(&path).unwrap_or(path_buf);
+                    let file_dir = file_path.parent()?.to_path_buf();
                     if terminal_roots
                         .iter()
-                        .any(|root| file_path.starts_with(root))
+                        .any(|root| file_path.starts_with(root) || root.starts_with(&file_dir))
                     {
                         return None;
                     }
-                    file_path.parent()?.to_path_buf()
+                    file_dir
                 } else {
                     self.get_repo_root_for_path(&path_buf, ctx)
                         .or_else(|| path_buf.parent().map(|p| p.to_path_buf()))?

@@ -673,7 +673,7 @@ impl SettingsWidget for ProjectExplorerWorkingDirectoryToggleWidget {
                 })
                 .finish(),
             Some(
-                "Start the project explorer and global search at the terminal's working directory instead of the git repository root.".into(),
+                "Start the project explorer and global search at the terminal's working directory instead of the git repository root. Applies to local sessions.".into(),
             ),
         )
     }

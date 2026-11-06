@@ -86,7 +86,7 @@ define_settings_group!(CodeSettings, settings: [
         surface: settings::SettingSurfaces::GUI,
         private: false,
         toml_path: "code.editor.project_explorer_uses_working_directory",
-        description: "Whether the project explorer and global search start at the terminal's working directory instead of the git repository root.",
+        description: "Whether the project explorer and global search start at the terminal's working directory instead of the git repository root. Applies to local sessions.",
     },
     // Controls whether the language server reformats the file on save.
     format_on_save: FormatOnSave {
