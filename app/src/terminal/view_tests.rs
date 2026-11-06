@@ -1361,7 +1361,6 @@ fn waterfall_gap_right_click_outside_pane_does_not_open_context_menu() {
             "a right-click outside the pane must not open the pane's context menu"
         );
 
-        // A right-click on the empty area below the input still opens the pane's context menu.
         rerender!();
         right_click!(vec2f(window_size.x() / 2., window_size.y() - 1.));
         assert!(

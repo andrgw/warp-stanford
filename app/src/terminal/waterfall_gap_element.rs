@@ -135,7 +135,7 @@ impl WaterfallGapElement {
 
     fn right_mouse_down(&self, position: Vector2F, ctx: &mut EventContext) -> bool {
         // Parents pass mouse events to every child, so in a split layout this element also
-        // receives right-clicks made in other panes. Only open the menu for clicks inside it.
+        // receives right-clicks made in other panes.
         if self
             .bounds()
             .expect("Bounds should be set before event dispatching")
